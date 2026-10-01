@@ -1,0 +1,30 @@
+{# One template for both "new topic" and "edit topic"; the view sets is_new #}
+{% extends "base.html" %}
+
+{% block title %}{% if is_new %}New topic{% else %}Edit {{ topic.title }}{% endif %} | Learning Tracker{% endblock %}
+
+{% block content %}
+    {% if is_new %}
+        <a class="back" href="{% url 'topics:list' %}">&larr; All topics</a>
+    {% else %}
+        <a class="back" href="{% url 'topics:detail' topic.id %}">&larr; Back to topic</a>
+    {% endif %}
+
+    <div class="card form-card">
+        <h1>{% if is_new %}New topic{% else %}Edit topic{% endif %}</h1>
+
+        {# novalidate is left off, so the browser also checks required fields #}
+        <form method="post">
+            {% csrf_token %}
+            {% include "includes/form_fields.html" %}
+
+            <div class="actions">
+                <button type="submit" class="btn btn-primary">
+                    {% if is_new %}Add topic{% else %}Save changes{% endif %}
+                </button>
+                <a class="btn btn-secondary"
+                   href="{% if is_new %}{% url 'topics:list' %}{% else %}{% url 'topics:detail' topic.id %}{% endif %}">Cancel</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

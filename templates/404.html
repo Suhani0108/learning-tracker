@@ -1,0 +1,12 @@
+{# Shown for missing pages when DEBUG is False (in DEBUG mode Django shows its own page) #}
+{% extends "base.html" %}
+
+{% block title %}Page not found | Learning Tracker{% endblock %}
+
+{% block content %}
+    <div class="empty-state">
+        <h1>Page not found</h1>
+        <p>That page doesn't exist, or it belongs to someone else.</p>
+        <a class="btn btn-primary" href="{% url 'topics:list' %}">Back to my topics</a>
+    </div>
+{% endblock %}

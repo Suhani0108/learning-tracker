@@ -1,0 +1,74 @@
+{# Reuse the layout (navbar, CSS) from base.html #}
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>My topics</h1>
+        <a class="btn btn-primary" href="{% url 'topics:create' %}">+ New topic</a>
+    </div>
+
+    {# ---------- Progress summary ---------- #}
+    {% if total %}
+        <section class="summary card" aria-label="Progress">
+            <div class="summary-text">
+                <span><strong>{{ done }} of {{ total }}</strong> topic{{ total|pluralize }} done</span>
+                <span class="summary-percent">{{ percent_done }}%</span>
+            </div>
+            {# A real <progress> element, so screen readers announce it too #}
+            <progress class="progress" max="100" value="{{ percent_done }}">{{ percent_done }}%</progress>
+        </section>
+    {% endif %}
+
+    {# ---------- Status filter ---------- #}
+    {# Plain links: clicking one reloads the page with ?status=... in the URL #}
+    <nav class="filters" aria-label="Filter by status">
+        <a class="filter{% if not selected_status %} is-active{% endif %}" href="{% url 'topics:list' %}"
+           {% if not selected_status %}aria-current="page"{% endif %}>
+            All <span class="count">{{ total }}</span>
+        </a>
+        {% for tab in status_tabs %}
+            <a class="filter{% if selected_status == tab.value %} is-active{% endif %}"
+               href="{% url 'topics:list' %}?status={{ tab.value }}"
+               {% if selected_status == tab.value %}aria-current="page"{% endif %}>
+                <span class="dot dot-{{ tab.value }}" aria-hidden="true"></span>
+                {{ tab.label }} <span class="count">{{ tab.count }}</span>
+            </a>
+        {% endfor %}
+    </nav>
+
+    {# ---------- Topic cards ---------- #}
+    <div class="topic-grid">
+        {# Loop over the "topics" list that the view passed in #}
+        {% for topic in topics %}
+            <a class="card topic-card" href="{% url 'topics:detail' topic.id %}">
+                <div class="card-header">
+                    <h2>{{ topic.title }}</h2>
+                    {# get_status_display shows the label ("In progress"), not the stored value #}
+                    <span class="status status-{{ topic.status }}">{{ topic.get_status_display }}</span>
+                </div>
+                {% if topic.description %}
+                    {# truncatewords keeps long descriptions from filling the card #}
+                    <p class="card-text">{{ topic.description|truncatewords:20 }}</p>
+                {% endif %}
+                <p class="meta">
+                    Updated {{ topic.updated_at|date:"j M Y" }}
+                    {% with n=topic.resources.count %}
+                        {% if n %} · {{ n }} resource{{ n|pluralize }}{% endif %}
+                    {% endwith %}
+                </p>
+            </a>
+        {% empty %}
+            {# Shown only when the loop has nothing to show #}
+            <div class="empty-state card">
+                {% if selected_status %}
+                    <p>No topics with this status.</p>
+                    <a class="btn btn-secondary" href="{% url 'topics:list' %}">Show all topics</a>
+                {% else %}
+                    <h2>Nothing here yet</h2>
+                    <p>Add the first thing you want to learn.</p>
+                    <a class="btn btn-primary" href="{% url 'topics:create' %}">+ New topic</a>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

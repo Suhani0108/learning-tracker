@@ -1,0 +1,830 @@
+/* =========================================================
+   Learning Tracker styles
+   Colours are stored as CSS variables ("custom properties")
+   at the top, so dark mode only has to swap the values.
+   ========================================================= */
+
+/* ---------- Colours: light mode (default) ---------- */
+:root {
+    --bg: #f5f6f8;
+    --surface: #ffffff;
+    --surface-hover: #f9fafb;
+    --border: #e2e5ea;
+    --border-strong: #c4c9d2;
+    --text: #151922;
+    --text-muted: #4f5866;      /* still 7:1 contrast on white, easy to read */
+
+    --primary: #4f46e5;
+    --primary-hover: #4338ca;
+    --primary-text: #ffffff;
+    --primary-soft: #eef0ff;
+
+    --danger: #b91c1c;
+    --danger-hover: #991b1b;
+    --danger-soft: #fdeeee;
+
+    --success-soft: #e7f8ef;
+    --success-text: #0f5c3a;
+
+    --focus: #2563eb;           /* outline colour for keyboard focus */
+
+    /* Status label colours: background + text */
+    --not-started-bg: #e7e9ee;
+    --not-started-text: #384150;
+    --not-started-dot: #8a93a3;
+    --in-progress-bg: #fff3cd;
+    --in-progress-text: #8a4a05;
+    --in-progress-dot: #e09a12;
+    --done-bg: #d8f5e6;
+    --done-text: #0f5c3a;
+    --done-dot: #1f9d62;
+
+    --radius: 10px;
+    --shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.08);
+}
+
+/* ---------- Colours: dark mode ----------
+   Used automatically when the computer is set to dark mode. */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #0f1115;
+        --surface: #181b22;
+        --surface-hover: #1e222b;
+        --border: #2a2f3a;
+        --border-strong: #3d4452;
+        --text: #e8eaee;
+        --text-muted: #a3abb8;
+
+        --primary: #8b93ff;
+        --primary-hover: #a5abff;
+        --primary-text: #0d0f1a;
+        --primary-soft: #222543;
+
+        --danger: #f47c7c;
+        --danger-hover: #f89a9a;
+        --danger-soft: #3a1d20;
+
+        --success-soft: #12301f;
+        --success-text: #8ce0b4;
+
+        --focus: #8ab4ff;
+
+        --not-started-bg: #2a2f3a;
+        --not-started-text: #d3d7de;
+        --not-started-dot: #8a93a3;
+        --in-progress-bg: #3a2a0c;
+        --in-progress-text: #fcd37a;
+        --in-progress-dot: #f0b13a;
+        --done-bg: #10301f;
+        --done-text: #86e3b3;
+        --done-dot: #3ccf8a;
+
+        --shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    }
+}
+
+/* ---------- Base ---------- */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    background: var(--bg);
+    color: var(--text);
+}
+
+h1, h2 {
+    line-height: 1.25;
+}
+
+h1 {
+    font-size: 1.75rem;
+    margin: 0 0 8px;
+}
+
+h2 {
+    font-size: 1.15rem;
+    margin: 0 0 12px;
+}
+
+a {
+    color: var(--primary);
+    text-underline-offset: 2px;
+}
+
+a:hover {
+    color: var(--primary-hover);
+}
+
+/* A clear outline whenever something is focused with the keyboard (Tab key).
+   :focus-visible skips it for mouse clicks, so it doesn't get in the way. */
+:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+.muted {
+    color: var(--text-muted);
+}
+
+/* Centres the content and limits its width */
+.container {
+    width: 100%;
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+main.container {
+    flex: 1;   /* pushes the footer to the bottom on short pages */
+    padding-top: 28px;
+    padding-bottom: 56px;
+}
+
+/* ---------- Skip link (hidden until focused) ---------- */
+.skip-link {
+    position: absolute;
+    left: 16px;
+    top: -48px;
+    padding: 8px 14px;
+    background: var(--primary);
+    color: var(--primary-text);
+    border-radius: 6px;
+    z-index: 10;
+}
+
+.skip-link:focus {
+    top: 12px;
+    color: var(--primary-text);
+}
+
+/* ---------- Navbar ---------- */
+.navbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;   /* stays at the top while scrolling */
+    top: 0;
+    z-index: 5;
+}
+
+.navbar-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    min-height: 60px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--text);
+    text-decoration: none;
+}
+
+.brand:hover {
+    color: var(--text);
+}
+
+.brand-mark {
+    display: inline-grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: var(--primary);
+    color: var(--primary-text);
+    font-size: 0.9rem;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+}
+
+.nav-links > a:not(.btn) {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 4px 0;
+    border-bottom: 2px solid transparent;
+}
+
+.nav-links > a:not(.btn):hover {
+    color: var(--text);
+}
+
+/* The page you're on is underlined */
+.nav-links > a[aria-current="page"] {
+    color: var(--text);
+    border-bottom-color: var(--primary);
+}
+
+.nav-user {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.inline-form {
+    display: inline;
+    margin: 0;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 40px;            /* big enough to tap comfortably */
+    padding: 8px 16px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font: inherit;
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.2;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.btn-sm {
+    min-height: 34px;
+    padding: 5px 12px;
+    font-size: 0.875rem;
+}
+
+.btn-block {
+    width: 100%;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: var(--primary-text);
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+    color: var(--primary-text);
+}
+
+.btn-secondary {
+    background: var(--surface);
+    color: var(--text);
+    border-color: var(--border-strong);
+}
+
+.btn-secondary:hover {
+    background: var(--surface-hover);
+    color: var(--text);
+    border-color: var(--text-muted);
+}
+
+.btn-ghost {
+    background: transparent;
+    color: var(--text-muted);
+    border-color: var(--border);
+}
+
+.btn-ghost:hover {
+    background: var(--surface-hover);
+    color: var(--text);
+}
+
+.btn-danger {
+    background: var(--danger);
+    color: #ffffff;
+}
+
+.btn-danger:hover {
+    background: var(--danger-hover);
+    color: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+    .btn-danger,
+    .btn-danger:hover {
+        color: #1a0b0b;
+    }
+}
+
+.btn-danger-outline {
+    background: transparent;
+    color: var(--danger);
+    border-color: var(--danger);
+}
+
+.btn-danger-outline:hover {
+    background: var(--danger-soft);
+    color: var(--danger-hover);
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* ---------- Messages ("Changes saved.") ---------- */
+.messages {
+    margin-bottom: 20px;
+}
+
+.message {
+    margin: 0 0 8px;
+    padding: 12px 16px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--surface);
+}
+
+.message-success {
+    background: var(--success-soft);
+    color: var(--success-text);
+    border-color: transparent;
+    font-weight: 500;
+}
+
+.message-error {
+    background: var(--danger-soft);
+    color: var(--danger);
+    border-color: transparent;
+}
+
+/* ---------- Page header ---------- */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.page-header h1 {
+    margin: 0;
+}
+
+.back {
+    display: inline-block;
+    margin-bottom: 16px;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+/* ---------- Cards ---------- */
+.card {
+    display: block;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px 22px;
+    margin-bottom: 16px;
+    color: inherit;
+    text-decoration: none;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.card-header h1,
+.card-header h2 {
+    margin: 0;
+}
+
+.card-text {
+    margin: 8px 0 0;
+    color: var(--text-muted);
+}
+
+.meta {
+    margin: 10px 0 0;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+/* ---------- Progress summary ---------- */
+.summary-text {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+}
+
+.summary-percent {
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+/* The <progress> bar needs a few browser-specific rules to restyle */
+.progress {
+    appearance: none;
+    -webkit-appearance: none;
+    display: block;
+    width: 100%;
+    height: 10px;
+    border: none;
+    border-radius: 999px;
+    background: var(--not-started-bg);
+    overflow: hidden;
+}
+
+.progress::-webkit-progress-bar {
+    background: var(--not-started-bg);
+    border-radius: 999px;
+}
+
+.progress::-webkit-progress-value {
+    background: var(--done-dot);
+    border-radius: 999px;
+}
+
+.progress::-moz-progress-bar {
+    background: var(--done-dot);
+    border-radius: 999px;
+}
+
+/* ---------- Status filter pills ---------- */
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 38px;
+    padding: 6px 14px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--text);
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.filter:hover {
+    border-color: var(--text-muted);
+    color: var(--text);
+}
+
+.filter.is-active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: var(--primary-text);
+}
+
+.count {
+    min-width: 22px;
+    padding: 0 7px;
+    border-radius: 999px;
+    background: var(--not-started-bg);
+    color: var(--not-started-text);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.filter.is-active .count {
+    background: rgba(255, 255, 255, 0.25);
+    color: inherit;
+}
+
+.dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+}
+
+.dot-not_started { background: var(--not-started-dot); }
+.dot-in_progress { background: var(--in-progress-dot); }
+.dot-done        { background: var(--done-dot); }
+
+/* ---------- Topic grid ---------- */
+/* As many columns as fit, each at least 280px wide */
+.topic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.topic-grid .card {
+    margin-bottom: 0;
+}
+
+.topic-card {
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.15s, transform 0.15s;
+}
+
+.topic-card:hover {
+    border-color: var(--primary);
+    color: inherit;
+    transform: translateY(-1px);
+}
+
+.topic-card h2 {
+    font-size: 1.1rem;
+}
+
+/* Keeps "Updated …" at the bottom so cards in a row line up */
+.topic-card .meta {
+    margin-top: auto;
+    padding-top: 12px;
+}
+
+.empty-state {
+    grid-column: 1 / -1;   /* span the whole grid */
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.empty-state p {
+    color: var(--text-muted);
+    margin: 0 0 16px;
+}
+
+/* ---------- Status labels ---------- */
+/* The class name comes from the stored value, e.g. status-in_progress */
+.status {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* A small dot before the text, so status isn't shown by colour alone */
+.status::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.status-not_started {
+    background: var(--not-started-bg);
+    color: var(--not-started-text);
+}
+
+.status-in_progress {
+    background: var(--in-progress-bg);
+    color: var(--in-progress-text);
+}
+
+.status-done {
+    background: var(--done-bg);
+    color: var(--done-text);
+}
+
+/* ---------- Detail page ---------- */
+.description {
+    margin-top: 16px;
+}
+
+.description p {
+    margin: 0 0 12px;
+}
+
+.resource-list {
+    list-style: none;
+    margin: 0 0 20px;
+    padding: 0;
+}
+
+.resource-list li {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.resource-list li:first-child {
+    border-top: 1px solid var(--border);
+}
+
+.resource-list a {
+    font-weight: 600;
+}
+
+/* Keeps the Remove button on the right */
+.resource-list .inline-form {
+    margin-left: auto;
+}
+
+.resource-url {
+    flex: 1;
+    min-width: 0;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    overflow-wrap: anywhere;
+}
+
+/* Title, URL and button side by side on wide screens */
+.resource-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 12px;
+    align-items: end;
+    padding-top: 16px;
+    border-top: 1px dashed var(--border-strong);
+}
+
+.resource-form .field {
+    margin-bottom: 0;
+}
+
+/* ---------- Forms ---------- */
+.form-card {
+    max-width: 600px;
+}
+
+.form-card h1 {
+    margin-bottom: 20px;
+}
+
+.auth-card {
+    max-width: 420px;
+    margin: 24px auto;
+}
+
+.auth-card h1 {
+    margin-bottom: 4px;
+}
+
+.auth-card form {
+    margin-top: 20px;
+}
+
+.auth-switch {
+    margin: 20px 0 0;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.field {
+    margin-bottom: 18px;
+}
+
+.field label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 0.925rem;
+}
+
+.field input[type="text"],
+.field input[type="password"],
+.field input[type="email"],
+.field input[type="url"],
+.field textarea,
+.field select {
+    display: block;
+    width: 100%;
+    min-height: 42px;
+    padding: 9px 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+}
+
+.field textarea {
+    resize: vertical;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+    color: var(--text-muted);
+    opacity: 0.8;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+    outline: none;
+    border-color: var(--focus);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus) 30%, transparent);
+}
+
+.help {
+    margin-top: 6px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.help ul {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.error {
+    margin: 6px 0 0;
+    color: var(--danger);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.field-has-error input,
+.field-has-error textarea,
+.field-has-error select {
+    border-color: var(--danger);
+}
+
+.form-errors {
+    margin-bottom: 18px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    background: var(--danger-soft);
+    color: var(--danger);
+    font-weight: 500;
+}
+
+.form-errors p {
+    margin: 0;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+    padding: 20px 0;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+/* ---------- Small screens (phones) ---------- */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .card {
+        padding: 16px;
+    }
+
+    .nav-user {
+        display: none;   /* save space; the Log out button is enough */
+    }
+
+    /* Put the URL on its own line under the link title */
+    .resource-url {
+        order: 3;
+        flex-basis: 100%;
+    }
+
+    .resource-form {
+        grid-template-columns: 1fr;
+    }
+
+    .resource-form .btn {
+        width: 100%;
+    }
+}
+
+/* Respect the "reduce motion" accessibility setting */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}

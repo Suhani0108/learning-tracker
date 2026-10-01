@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Delete {{ topic.title }} | Learning Tracker{% endblock %}
+
+{% block content %}
+    <div class="card form-card">
+        <h1>Delete this topic?</h1>
+        <p>
+            “<strong>{{ topic.title }}</strong>” and its
+            {{ topic.resources.count }} resource{{ topic.resources.count|pluralize }}
+            will be deleted. This can't be undone.
+        </p>
+
+        {# The actual delete only happens when this form is POSTed #}
+        <form method="post" class="actions">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Yes, delete it</button>
+            <a class="btn btn-secondary" href="{% url 'topics:detail' topic.id %}">Cancel</a>
+        </form>
+    </div>
+{% endblock %}
